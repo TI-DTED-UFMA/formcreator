@@ -67,6 +67,14 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
    public function getAdditionalFields() {
       return [
          [
+            'name'      => 'sort_order',
+            'type'      => 'integer',
+            'label'     => __('Ordem de exibição', 'formcreator'),
+            'min'       => 0,
+            'step'      => 1,
+            'list'      => true
+         ],
+         [
             'name'      => KnowbaseItemCategory::getForeignKeyField(),
             'type'      => 'dropdownValue',
             'label'     => __('Knowbase category', 'formcreator'),
@@ -79,6 +87,20 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
             'list'      => false
          ]
       ];
+   }
+
+   public function rawSearchOptions() {
+      $tab = parent::rawSearchOptions();
+
+      $tab[] = [
+         'id'            => '4',
+         'table'         => $this->getTable(),
+         'field'         => 'sort_order',
+         'name'          => __('Ordem de exibição', 'formcreator'),
+         'datatype'      => 'integer',
+      ];
+
+      return $tab;
    }
 
    /**
@@ -139,7 +161,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
          ],
          'FROM' => $cat_table,
          'LEFT JOIN' => [],
-         'ORDER' => ["level DESC", "name DESC"],
+         'ORDER' => ["level DESC", "sort_order ASC", "name DESC"],
       ];
       $translation_table = DropdownTranslation::getTable();
       if (Session::haveTranslations(self::getType(), 'name')) {
@@ -253,7 +275,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       return [
          'SELECT' => [
             $cat_table => [
-              'name', 'id'
+              'name', 'id', 'sort_order'
             ]
          ],
          'FROM' => $cat_table,
@@ -268,6 +290,10 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
          'WHERE' => ["$form_table.id" => $form_ids],
          'GROUPBY' => [
             "$cat_table.id"
+         ],
+         'ORDER' => [
+            "$cat_table.sort_order ASC",
+            "$cat_table.name ASC"
          ]
       ];
    }

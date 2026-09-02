@@ -2005,14 +2005,23 @@ PluginFormcreatorTranslatableInterface
          $categories[$category['id']] = $category['name'];
       }
 
+      $cat_table = PluginFormcreatorCategory::getTable();
+
       $form_query = PluginFormcreatorForm::getFormListQuery();
       $form_query['SELECT'] = [
          $form_table => ['id', 'name', 'description', $formCategoryFk],
       ];
+      $form_query['LEFT JOIN'][$cat_table] = [
+         'FKEY' => [
+            $form_table => $formCategoryFk,
+            $cat_table  => 'id',
+         ]
+      ];
       $form_query['WHERE']["$form_table.helpdesk_home"] = 1;
       $form_query['WHERE']["$form_table.$formCategoryFk"] = array_keys($categories);
       $form_query['ORDER'] = [
-         "$form_table.$formCategoryFk ASC",
+         "$cat_table.sort_order ASC",
+         "$cat_table.name ASC",
          "$form_table.name ASC",
       ];
 
