@@ -161,7 +161,7 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
          ],
          'FROM' => $cat_table,
          'LEFT JOIN' => [],
-         'ORDER' => ["level DESC", "sort_order ASC", "name DESC"],
+         'ORDER' => ["level DESC", "sort_order DESC", "name DESC"],
       ];
       $translation_table = DropdownTranslation::getTable();
       if (Session::haveTranslations(self::getType(), 'name')) {
