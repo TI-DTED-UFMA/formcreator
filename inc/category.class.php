@@ -64,7 +64,17 @@ class PluginFormcreatorCategory extends CommonTreeDropdown
       $item->showChildren();
    }
 
+   public static function checkSchema(): void {
+      global $DB;
+      $table = self::getTable();
+      if ($DB->tableExists($table) && !$DB->fieldExists($table, 'sort_order')) {
+         $DB->query("ALTER TABLE `{$table}` ADD COLUMN `sort_order` INT NOT NULL DEFAULT 0, ADD INDEX (`sort_order`)");
+         $DB->query("UPDATE `{$table}` SET `sort_order` = `id` * 10 WHERE `sort_order` = 0");
+      }
+   }
+
    public function getAdditionalFields() {
+      self::checkSchema();
       return [
          [
             'name'      => 'sort_order',

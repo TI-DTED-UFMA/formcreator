@@ -1991,6 +1991,8 @@ PluginFormcreatorTranslatableInterface
    public function showForCentral() {
       global $DB, $TRANSLATE;
 
+      PluginFormcreatorCategory::checkSchema();
+
       // Define tables
       $form_table = PluginFormcreatorForm::getTable();
 
